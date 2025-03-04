@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<body>
+<canvas id="canvas" width="128" height="128"></canvas>
+<script>
+const sizes = [16, 48, 128];
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+sizes.forEach(size => {
+    canvas.width = size;
+    canvas.height = size;
+    
+    // 背景を描画
+    ctx.fillStyle = '#4CAF50';
+    ctx.fillRect(0, 0, size, size);
+    
+    // テキストを描画
+    ctx.fillStyle = 'white';
+    ctx.font = `${size/3}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('あ', size/2, size/2);
+    
+    // PNGとしてダウンロード
+    const link = document.createElement('a');
+    link.download = `icon${size}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+});
+</script>
+</body>
+</html> 

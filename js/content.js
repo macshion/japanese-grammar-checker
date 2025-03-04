@@ -1,0 +1,1 @@
+console.log("Japanese Grammar Checker content script loaded");chrome.runtime.onMessage.addListener((e,o,t)=>{if(e.action==="checkText"){const n=window.getSelection().toString();return t(n?{text:n}:{error:"No text selected"}),!0}});document.addEventListener("mouseup",()=>{const e=window.getSelection().toString();e&&chrome.runtime.sendMessage({action:"textSelected",text:e})});

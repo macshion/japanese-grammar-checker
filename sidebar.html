@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Japanese Grammar Checker</title>
+    <link rel="stylesheet" href="css/sidebar.css">
+</head>
+<body>
+    <div class="container">
+        <h2>日本語文法チェッカー</h2>
+        <div class="input-container">
+            <textarea id="inputText" placeholder="ここに日本語を入力してください..."></textarea>
+            <button id="clearButton" class="icon-button" title="入力をクリア">
+                ✕
+            </button>
+        </div>
+        <button id="checkButton">チェック</button>
+        <div id="loadingSpinner" class="hidden">
+            <div class="spinner"></div>
+        </div>
+        <div id="resultContainer" class="hidden">
+            <div id="result"></div>
+            <button id="copyButton" class="copy-button">
+                <span class="copy-text">コピー</span>
+                <span class="copied-text">コピーしました!</span>
+            </button>
+        </div>
+        
+        <!-- History section -->
+        <div id="historyContainer" class="mt-8">
+            <div class="flex justify-between items-center mb-2">
+                <h3>履歴</h3>
+                <div class="history-buttons">
+                    <button id="importHistoryButton" class="text-sm text-gray-500 hover:text-gray-700 mr-2">
+                        履歴をインポート
+                    </button>
+                    <input type="file" id="importHistoryFile" accept=".json" class="hidden">
+                    <button id="exportHistoryButton" class="text-sm text-gray-500 hover:text-gray-700 mr-2">
+                        履歴をエクスポート
+                    </button>
+                    <button id="clearHistoryButton" class="text-sm text-gray-500 hover:text-gray-700">
+                        履歴を削除
+                    </button>
+                </div>
+            </div>
+            <ul id="historyList" class="border rounded-md overflow-hidden"></ul>
+        </div>
+    </div>
+    <script src="js/sidebar.js" type="module"></script>
+</body>
+</html> 
