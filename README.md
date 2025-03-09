@@ -17,6 +17,24 @@ AI-powered Japanese grammar checker and optimizer Chrome extension.
 4. The text will automatically entered in the input;
 5. Click the check button to see the grammar fix result.
 
+## Installation
+
+### Option 1: Install from ZIP file (Recommended)
+
+1. Download the latest release ZIP file from the [Releases page](https://github.com/macshion/japanese-grammar-checker/releases)
+2. Extract the ZIP file to a folder on your computer
+3. Open Chrome and navigate to `chrome://extensions/`
+4. Enable "Developer mode" (toggle in the top-right corner)
+5. Click "Load unpacked" and select the extracted folder
+6. The extension should now be installed and ready to use
+
+### Option 2: Build from source
+
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Build the extension: `npm run clean:build`
+4. Load the `dist` directory in Chrome as an unpacked extension
+
 ## Project Structure
 
 ```
