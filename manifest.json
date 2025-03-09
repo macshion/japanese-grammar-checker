@@ -5,7 +5,8 @@
   "description": "AI-powered Japanese grammar checker and optimizer",
   "permissions": [
     "sidePanel",
-    "storage"
+    "storage",
+    "contextMenus"
   ],
   "side_panel": {
     "default_path": "sidebar.html"

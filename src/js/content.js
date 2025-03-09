@@ -15,13 +15,5 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 });
 
-// Add a context menu item when text is selected
-document.addEventListener('mouseup', () => {
-  const selectedText = window.getSelection().toString();
-  if (selectedText) {
-    chrome.runtime.sendMessage({ 
-      action: 'textSelected', 
-      text: selectedText 
-    });
-  }
-}); 
+// We've removed the automatic mouseup event listener that opened the sidebar
+// The context menu functionality will be handled by the background script

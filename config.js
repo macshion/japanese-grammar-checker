@@ -2,7 +2,7 @@
 export const APP_CONFIG = {
   NAME: 'Japanese Grammar Checker',
   VERSION: '1.0.0',
-  AUTHOR: 'Your Name',
+  AUTHOR: 'Macshion',
   DESCRIPTION: 'AI-powered Japanese grammar checker and optimizer'
 };
 
