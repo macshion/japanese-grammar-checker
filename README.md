@@ -2,6 +2,21 @@
 
 AI-powered Japanese grammar checker and optimizer Chrome extension.
 
+## How to use?
+
+1. Click the extension icon to open the sidebar;
+2. Enter your own openai key;
+3. Enter some japanese and click check button;
+4. You can see the proper expression fixed by AI.
+
+## The other way to use
+
+1. Select some text in a website;
+2. Right click and open the menu;
+3. Click "日本語文法をチェック" button;
+4. The text will automatically entered in the input;
+5. Click the check button to see the grammar fix result.
+
 ## Project Structure
 
 ```

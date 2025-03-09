@@ -10,7 +10,6 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "build:extension": "vite build --config vite.config.extension.js",
-    "build:extension:root": "vite build --config vite.config.extension.js",
     "clean": "rm -rf dist",
     "clean:build": "npm run clean && npm run build:extension"
   },

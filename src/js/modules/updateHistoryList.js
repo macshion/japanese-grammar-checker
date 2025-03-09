@@ -1,3 +1,4 @@
+import { UI_ELEMENTS, UI_MESSAGES, STORAGE_CONFIG } from '../config.js';
 
 // Helper function to update history list UI
 export async function updateHistoryList() {
@@ -13,10 +14,27 @@ export async function updateHistoryList() {
                 return;
             }
 
+            // Helper function to sanitize text for safe HTML display
+            const sanitizeText = (text) => {
+                return text
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
+            };
+
+            // Helper function to format text for display
+            const formatTextForDisplay = (text) => {
+                const sanitized = sanitizeText(text);
+                return sanitized
+                    .replace(/\n/g, '<br>')
+                    .replace(/\s{2,}/g, match => '&nbsp;'.repeat(match.length));
+            };
+
             historyList.innerHTML = history.map((item, index) => `
-                <li class="history-item border-b border-gray-200 p-4 hover:bg-gray-50 ${index === 0 ? 'selected' : ''}" data-index="${index}">
-                    <div class="flex justify-between items-start">
-                        <div class="text-sm text-gray-600">${new Date(item.timestamp).toLocaleString('ja-JP')}</div>
+                <li class="history-item ${index === 0 ? 'selected' : ''}" data-index="${index}">
+                    <div class="history-item-header">
+                        <div class="history-timestamp">${new Date(item.timestamp).toLocaleString('ja-JP')}</div>
                         <div class="history-actions">
                             <button class="history-copy-btn icon-button" title="修正文をコピー">📋</button>
                             <button class="history-view-original-btn icon-button" title="原文を表示">📄</button>
@@ -25,7 +43,7 @@ export async function updateHistoryList() {
                             <button class="history-delete-btn icon-button" title="削除">🗑️</button>
                         </div>
                     </div>
-                    <div class="mt-2 text-gray-600 corrected-text">${item.correctedText}</div>
+                    <div class="corrected-text">${formatTextForDisplay(item.correctedText)}</div>
                 </li>
             `).join('');
 
@@ -49,7 +67,11 @@ export async function updateHistoryList() {
                     li.classList.add('selected');
                     
                     document.getElementById(UI_ELEMENTS.INPUT_TEXT).value = history[index].originalText;
-                    document.getElementById(UI_ELEMENTS.RESULT).textContent = history[index].correctedText;
+                    
+                    // Format the corrected text for display
+                    const resultElement = document.getElementById(UI_ELEMENTS.RESULT);
+                    resultElement.innerHTML = formatTextForDisplay(history[index].correctedText);
+                    
                     document.getElementById(UI_ELEMENTS.RESULT_CONTAINER).classList.remove('hidden');
                 });
                 
@@ -102,9 +124,9 @@ export async function updateHistoryList() {
                         const modalBody = document.createElement('div');
                         modalBody.className = 'modal-body';
                         
-                        const originalText = document.createElement('pre');
+                        const originalText = document.createElement('div');
                         originalText.className = 'original-text-modal';
-                        originalText.textContent = history[index].originalText;
+                        originalText.innerHTML = formatTextForDisplay(history[index].originalText);
                         
                         modalBody.appendChild(originalText);
                         
@@ -160,9 +182,9 @@ export async function updateHistoryList() {
                         const modalBody = document.createElement('div');
                         modalBody.className = 'modal-body';
                         
-                        const explanationText = document.createElement('pre');
+                        const explanationText = document.createElement('div');
                         explanationText.className = 'explanation-text-modal';
-                        explanationText.textContent = history[index].explanation;
+                        explanationText.innerHTML = formatTextForDisplay(history[index].explanation);
                         
                         modalBody.appendChild(explanationText);
                         
@@ -218,11 +240,11 @@ export async function updateHistoryList() {
                         const modalBody = document.createElement('div');
                         modalBody.className = 'modal-body';
                         
-                        const responseText = document.createElement('pre');
-                        responseText.className = 'full-response-text';
-                        responseText.textContent = history[index].fullResponse;
+                        const fullResponseText = document.createElement('div');
+                        fullResponseText.className = 'full-response-text';
+                        fullResponseText.innerHTML = formatTextForDisplay(history[index].fullResponse);
                         
-                        modalBody.appendChild(responseText);
+                        modalBody.appendChild(fullResponseText);
                         
                         // Assemble modal
                         modalContent.appendChild(modalHeader);

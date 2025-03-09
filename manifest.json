@@ -6,8 +6,16 @@
   "permissions": [
     "sidePanel",
     "storage",
-    "contextMenus"
+    "contextMenus",
+    "notifications",
+    "scripting"
   ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src https://api.openai.com"
+  },
   "side_panel": {
     "default_path": "sidebar.html"
   },

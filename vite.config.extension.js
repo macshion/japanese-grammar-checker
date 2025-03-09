@@ -3,8 +3,8 @@ import { resolve } from 'path';
 import { copyFileSync, mkdirSync, existsSync } from 'fs';
 import { BUILD_CONFIG } from './config.js';
 
-// 更新输出目录为当前目录
-const OUTPUT_DIR = '.';
+// 使用配置文件中定义的输出目录
+const OUTPUT_DIR = BUILD_CONFIG.OUTPUT_DIR;
 
 // Custom plugin to copy manifest.json and other static files
 const copyManifestPlugin = () => {
@@ -18,6 +18,17 @@ const copyManifestPlugin = () => {
       if (!existsSync(`${OUTPUT_DIR}/css`)) {
         mkdirSync(`${OUTPUT_DIR}/css`, { recursive: true });
       }
+      
+      // Copy manifest.json to the output directory
+      copyFileSync('manifest.json', `${OUTPUT_DIR}/manifest.json`);
+      
+      // Copy sidebar.html to the output directory
+      copyFileSync('sidebar.html', `${OUTPUT_DIR}/sidebar.html`);
+      
+      // Copy icon.svg to the output directory
+      if (existsSync('icon.svg')) {
+        copyFileSync('icon.svg', `${OUTPUT_DIR}/icon.svg`);
+      }
     }
   };
 };
@@ -25,7 +36,7 @@ const copyManifestPlugin = () => {
 export default defineConfig({
   build: {
     outDir: OUTPUT_DIR,
-    emptyOutDir: false, // 不清空输出目录，避免删除项目文件
+    emptyOutDir: true, // 清空输出目录，确保干净的构建
     rollupOptions: {
       input: {
         'js/sidebar': resolve(__dirname, `${BUILD_CONFIG.SOURCE_DIR}/js/sidebar.js`),
