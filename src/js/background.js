@@ -1,13 +1,57 @@
-// Enable the side panel to open when the extension action is clicked
-chrome.sidePanel
-  .setPanelBehavior({ openPanelOnActionClick: true })
-  .catch((error) => console.error(error));
+// Flag to track if the extension has been initialized
+let isInitialized = false;
 
-// Create a context menu item that appears when text is selected
-chrome.contextMenus.create({
-  id: 'checkJapaneseGrammar',
-  title: '日本語文法をチェック',
-  contexts: ['selection'],
+// Initialize the extension
+function initialize() {
+  // Only initialize once
+  if (isInitialized) {
+    console.log('Extension already initialized, skipping initialization');
+    return;
+  }
+  
+  console.log('Initializing Japanese Grammar Checker extension');
+  
+  // Enable the side panel to open when the extension action is clicked
+  // Use a callback instead of promises for better compatibility
+  chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true }, () => {
+    console.log('Panel behavior set successfully');
+  });
+
+  // First remove any existing context menu items to prevent duplicates
+  chrome.contextMenus.removeAll(() => {
+    console.log('Removed all existing context menu items');
+    
+    // Create a context menu item that appears when text is selected
+    chrome.contextMenus.create({
+      id: 'checkJapaneseGrammar',
+      title: '日本語文法をチェック',
+      contexts: ['selection'],
+    }, () => {
+      // Check for any errors during creation
+      if (chrome.runtime.lastError) {
+        console.error('Error creating context menu:', chrome.runtime.lastError);
+      } else {
+        console.log('Context menu created successfully');
+        // Mark as initialized only after successful creation
+        isInitialized = true;
+      }
+    });
+  });
+}
+
+// Initialize the extension when the service worker starts
+initialize();
+
+// Also initialize when the extension is installed or updated
+chrome.runtime.onInstalled.addListener((details) => {
+  console.log('Extension installed or updated:', details.reason);
+  initialize();
+});
+
+// Also initialize when the browser starts
+chrome.runtime.onStartup.addListener(() => {
+  console.log('Browser started, initializing extension');
+  initialize();
 });
 
 // Function to ensure content script is loaded
@@ -36,7 +80,7 @@ function ensureContentScriptLoaded(tabId) {
 }
 
 // Function to ensure the sidebar has received the selected text
-function ensureSidebarHasText(windowId, maxAttempts = 5) {
+function ensureSidebarHasText(maxAttempts = 5) {
   let attempts = 0;
   
   function checkSidebar() {
@@ -83,50 +127,41 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     }
     
     // Always store the selected text in storage for the sidebar to access
-    chrome.storage.local.set({ selectedText: info.selectionText }, async () => {
+    chrome.storage.local.set({ selectedText: info.selectionText }, () => {
       try {
-        // Check if the side panel is already open
-        const options = await chrome.sidePanel.getOptions({ windowId: tab.windowId });
-        
-        if (options.enabled && options.open) {
-          // If the side panel is already open, ensure content script is loaded before sending message
-          await ensureContentScriptLoaded(tab.id);
+        // Open the side panel with the correct parameters and a callback
+        // This will open the panel in all the pages on the current window
+        chrome.sidePanel.open({ windowId: tab.windowId }, () => {
+          console.log('Side panel opened successfully');
           
-          // Try to send a message to update the text
-          try {
-            chrome.tabs.sendMessage(tab.id, { 
-              action: 'updateSelectedText', 
-              text: info.selectionText 
-            }, (response) => {
-              // Check for errors in sending the message
-              if (chrome.runtime.lastError) {
-                console.error('Error sending message to tab:', chrome.runtime.lastError);
-                // If there's an error, just open the side panel
-                // The text is already in storage, so it will be loaded
-                chrome.sidePanel.open({ windowId: tab.windowId });
-                // Start checking if the sidebar has received the text
-                ensureSidebarHasText(tab.windowId);
-              }
-            });
-          } catch (error) {
-            console.error('Error sending message to tab:', error);
-            // If there's an error, just open the side panel
-            chrome.sidePanel.open({ windowId: tab.windowId });
-            // Start checking if the sidebar has received the text
-            ensureSidebarHasText(tab.windowId);
-          }
-        } else {
-          // If the side panel is not open, open it
-          chrome.sidePanel.open({ windowId: tab.windowId });
-          // Start checking if the sidebar has received the text
-          ensureSidebarHasText(tab.windowId);
-        }
+          // Ensure content script is loaded before sending message
+          ensureContentScriptLoaded(tab.id).then(() => {
+            // Try to send a message to update the text
+            try {
+              chrome.tabs.sendMessage(tab.id, { 
+                action: 'updateSelectedText', 
+                text: info.selectionText 
+              }, (response) => {
+                // Check for errors in sending the message
+                if (chrome.runtime.lastError) {
+                  console.error('Error sending message to tab:', chrome.runtime.lastError);
+                  // The text is already in storage, so it will be loaded when the sidebar opens
+                  // Start checking if the sidebar has received the text
+                  ensureSidebarHasText();
+                }
+              });
+            } catch (error) {
+              console.error('Error sending message to tab:', error);
+              // The text is already in storage, so it will be loaded when the sidebar opens
+              // Start checking if the sidebar has received the text
+              ensureSidebarHasText();
+            }
+          });
+        });
       } catch (error) {
-        console.error('Error checking side panel state:', error);
-        // Fallback: just open the side panel
-        chrome.sidePanel.open({ windowId: tab.windowId });
+        console.error('Error opening side panel:', error);
         // Start checking if the sidebar has received the text
-        ensureSidebarHasText(tab.windowId);
+        ensureSidebarHasText();
       }
     });
   }

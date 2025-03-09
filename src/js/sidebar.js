@@ -108,6 +108,52 @@ function checkForSelectedText() {
     });
 }
 
+// Function to save text and result to history
+function saveToHistory(originalText, correctedText, fullResponse = '', explanation = '') {
+    try {
+        chrome.storage.local.get([STORAGE_CONFIG.KEYS.HISTORY], (result) => {
+            const history = result[STORAGE_CONFIG.KEYS.HISTORY] || [];
+            
+            // Add new entry to the beginning of the history array
+            history.unshift({
+                timestamp: new Date().toISOString(),
+                originalText: originalText,
+                correctedText: correctedText,
+                fullResponse: fullResponse || correctedText,
+                explanation: explanation
+            });
+
+            // Keep only the latest MAX_HISTORY_ITEMS items
+            if (history.length > STORAGE_CONFIG.MAX_HISTORY_ITEMS) {
+                history.length = STORAGE_CONFIG.MAX_HISTORY_ITEMS;
+            }
+
+            chrome.storage.local.set({ [STORAGE_CONFIG.KEYS.HISTORY]: history }, () => {
+                updateHistoryList();
+            });
+        });
+    } catch (historyError) {
+        console.error('Failed to save to history:', historyError);
+    }
+}
+
+// Function to sanitize text for safe HTML display
+function sanitizeText(text) {
+    return text
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+// Function to format text for display with line breaks
+function formatTextForDisplay(text) {
+    const sanitized = sanitizeText(text);
+    return sanitized
+        .replace(/\n/g, '<br>')
+        .replace(/\s{2,}/g, match => '&nbsp;'.repeat(match.length));
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const inputText = document.getElementById(UI_ELEMENTS.INPUT_TEXT);
     const checkButton = document.getElementById(UI_ELEMENTS.CHECK_BUTTON);
@@ -120,10 +166,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const exportHistoryButton = document.getElementById(UI_ELEMENTS.EXPORT_HISTORY_BUTTON);
     const importHistoryButton = document.getElementById(UI_ELEMENTS.IMPORT_HISTORY_BUTTON);
     const importHistoryFile = document.getElementById(UI_ELEMENTS.IMPORT_HISTORY_FILE);
+    const historyMenuButton = document.getElementById('historyMenuButton');
+    const historyMenuDropdown = document.getElementById('historyMenuDropdown');
+
+    // Toggle dropdown menu
+    historyMenuButton?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        historyMenuDropdown.classList.toggle('hidden');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', () => {
+        if (!historyMenuDropdown.classList.contains('hidden')) {
+            historyMenuDropdown.classList.add('hidden');
+        }
+    });
+
+    // Prevent clicks inside dropdown from closing it
+    historyMenuDropdown?.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
 
     // Import history button functionality
     importHistoryButton?.addEventListener('click', () => {
         importHistoryFile.click();
+        historyMenuDropdown.classList.add('hidden');
     });
 
     // Import history file change handler
@@ -238,6 +305,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Release the URL object
                 URL.revokeObjectURL(url);
+                
+                // Close the dropdown
+                historyMenuDropdown.classList.add('hidden');
             });
         } catch (error) {
             console.error('Failed to export history:', error);
@@ -252,6 +322,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 chrome.storage.local.remove([STORAGE_CONFIG.KEYS.HISTORY], () => {
                     updateHistoryList();
                     alert(UI_MESSAGES.HISTORY_CLEARED);
+                    
+                    // Close the dropdown
+                    historyMenuDropdown.classList.add('hidden');
                 });
             } catch (error) {
                 console.error('Failed to clear history:', error);
@@ -314,52 +387,6 @@ document.addEventListener('DOMContentLoaded', () => {
             performGrammarCheck(apiKey, inputText.value);
         });
     });
-
-    // Function to save text and result to history
-    function saveToHistory(originalText, correctedText, fullResponse = '', explanation = '') {
-        try {
-            chrome.storage.local.get([STORAGE_CONFIG.KEYS.HISTORY], (result) => {
-                const history = result[STORAGE_CONFIG.KEYS.HISTORY] || [];
-                
-                // Add new entry to the beginning of the history array
-                history.unshift({
-                    timestamp: new Date().toISOString(),
-                    originalText: originalText,
-                    correctedText: correctedText,
-                    fullResponse: fullResponse || correctedText,
-                    explanation: explanation
-                });
-
-                // Keep only the latest MAX_HISTORY_ITEMS items
-                if (history.length > STORAGE_CONFIG.MAX_HISTORY_ITEMS) {
-                    history.length = STORAGE_CONFIG.MAX_HISTORY_ITEMS;
-                }
-
-                chrome.storage.local.set({ [STORAGE_CONFIG.KEYS.HISTORY]: history }, () => {
-                    updateHistoryList();
-                });
-            });
-        } catch (historyError) {
-            console.error('Failed to save to history:', historyError);
-        }
-    }
-
-    // Function to sanitize text for safe HTML display
-    function sanitizeText(text) {
-        return text
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#039;');
-    }
-
-    // Function to format text for display with line breaks
-    function formatTextForDisplay(text) {
-        const sanitized = sanitizeText(text);
-        return sanitized
-            .replace(/\n/g, '<br>')
-            .replace(/\s{2,}/g, match => '&nbsp;'.repeat(match.length));
-    }
 
     // Function to perform the grammar check
     async function performGrammarCheck(apiKey, text) {
@@ -449,7 +476,7 @@ document.addEventListener('DOMContentLoaded', () => {
             result.innerHTML = formattedText;
             resultContainer.classList.remove('hidden');
 
-            // Save to history
+            // Save to history using the global saveToHistory function
             saveToHistory(text, correctedText, fullResponse, explanation);
             
             // After updating the history list, select the first item automatically

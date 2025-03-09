@@ -23,7 +23,7 @@
             <div id="result"></div>
             <button id="copyButton" class="copy-button">
                 <span class="copy-text">コピー</span>
-                <span class="copied-text">コピーしました!</span>
+                <span class="copied-text">Copied!</span>
             </button>
         </div>
         
@@ -31,18 +31,26 @@
         <div id="historyContainer" class="history-container">
             <div class="history-header">
                 <h3>履歴</h3>
-                <div class="history-buttons">
-                    <button id="importHistoryButton" class="history-button">
-                        履歴をインポート
+                <div class="history-menu">
+                    <button id="historyMenuButton" class="menu-button" title="履歴メニュー">
+                        ⋮
                     </button>
-                    <input type="file" id="importHistoryFile" accept=".json" class="hidden">
-                    <button id="exportHistoryButton" class="history-button">
-                        履歴をエクスポート
-                    </button>
-                    <button id="clearHistoryButton" class="history-button">
-                        履歴を削除
-                    </button>
+                    <div id="historyMenuDropdown" class="dropdown-menu hidden">
+                        <button id="importHistoryButton" class="dropdown-item">
+                            <span class="menu-icon">📥</span>
+                            <span class="menu-text">履歴をインポート</span>
+                        </button>
+                        <button id="exportHistoryButton" class="dropdown-item">
+                            <span class="menu-icon">📤</span>
+                            <span class="menu-text">履歴をエクスポート</span>
+                        </button>
+                        <button id="clearHistoryButton" class="dropdown-item">
+                            <span class="menu-icon">🗑️</span>
+                            <span class="menu-text">履歴を削除</span>
+                        </button>
+                    </div>
                 </div>
+                <input type="file" id="importHistoryFile" accept=".json" class="hidden">
             </div>
             <ul id="historyList" class="history-list"></ul>
         </div>
