@@ -34,12 +34,12 @@ export const UI_ELEMENTS = {
     RESULT_CONTAINER: 'resultContainer',
     RESULT: 'result',
     COPY_BUTTON: 'copyButton',
-    HISTORY_LIST: 'historyList',
+    HISTORY_LIST: 'history-list',
     HISTORY_CONTAINER: 'historyContainer',
-    CLEAR_HISTORY_BUTTON: 'clearHistoryButton',
-    EXPORT_HISTORY_BUTTON: 'exportHistoryButton',
-    IMPORT_HISTORY_BUTTON: 'importHistoryButton',
-    IMPORT_HISTORY_FILE: 'importHistoryFile'
+    CLEAR_HISTORY_BUTTON: 'history-clear-button',
+    EXPORT_HISTORY_BUTTON: 'history-export-button',
+    IMPORT_HISTORY_BUTTON: 'history-import-button',
+    IMPORT_HISTORY_FILE: 'history-import-file'
 };
 
 export const UI_MESSAGES = {

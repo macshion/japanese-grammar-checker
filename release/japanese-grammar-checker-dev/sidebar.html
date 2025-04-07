@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Japanese Grammar Checker</title>
+    <link rel="stylesheet" href="css/sidebar.css">
+    <!-- Remove the TailwindCSS CDN as it violates CSP -->
+</head>
+<body>
+    <div class="container">
+        <div class="tab-navigation">
+            <button class="tab-button active" data-tab="grammar">文法チェック</button>
+            <button class="tab-button" data-tab="translation">翻訳</button>
+            <button class="tab-button" data-tab="ai-chat">AIチャット</button>
+            <button id="settingsButton" class="icon-button settings-button" title="設定">⚙️</button>
+        </div>
+
+        <!-- Settings Menu Dropdown -->
+        <div id="settingsMenuDropdown" class="dropdown-menu settings-dropdown hidden">
+            <button id="importSettingsButton" class="dropdown-item">
+                <span class="menu-icon">📥</span>
+                <span class="menu-text">設定をインポート</span>
+            </button>
+            <button id="exportSettingsButton" class="dropdown-item">
+                <span class="menu-icon">📤</span>
+                <span class="menu-text">設定をエクスポート</span>
+            </button>
+            <button id="setApiKeyButton" class="dropdown-item">
+                <span class="menu-icon">🔑</span>
+                <span class="menu-text">APIキーを設定</span>
+            </button>
+        </div>
+
+        <!-- Grammar Check Tab -->
+        <div class="tab-content active" id="grammar-tab">
+            <div class="input-container">
+                <textarea id="inputText" placeholder="ここに日本語を入力してください..."></textarea>
+                <button id="clearButton" class="icon-button" title="入力をクリア">
+                    ✕
+                </button>
+            </div>
+            <button id="checkButton">チェック</button>
+            <div id="loadingSpinner" class="hidden">
+                <div class="spinner"></div>
+            </div>
+            <div id="resultContainer" class="hidden">
+                <div id="result"></div>
+                <button id="copyButton" class="copy-button">
+                    <span class="copy-text">コピー</span>
+                    <span class="copied-text">Copied!</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Translation Tab -->
+        <div class="tab-content" id="translation-tab">
+            <div class="input-container">
+                <textarea id="translationInput" placeholder="翻訳したいテキストを入力してください..."></textarea>
+                <button id="clearTranslationButton" class="icon-button" title="入力をクリア">
+                    ✕
+                </button>
+            </div>
+            <div class="translation-options">
+                <select id="sourceLanguage">
+                    <option value="ja">日本語</option>
+                    <option value="en">英語</option>
+                    <option value="zh">中国語</option>
+                    <option value="ko">韓国語</option>
+                </select>
+                <select id="targetLanguage">
+                    <option value="en">英語</option>
+                    <option value="ja">日本語</option>
+                    <option value="zh">中国語</option>
+                    <option value="ko">韓国語</option>
+                </select>
+            </div>
+            <button id="translateButton">翻訳</button>
+            <div id="translationLoadingSpinner" class="hidden">
+                <div class="spinner"></div>
+            </div>
+            <div id="translationResultContainer" class="hidden">
+                <div id="translationResult"></div>
+                <button id="copyTranslationButton" class="copy-button">
+                    <span class="copy-text">コピー</span>
+                    <span class="copied-text">Copied!</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- AI Chat Tab -->
+        <div class="tab-content" id="ai-chat-tab">
+            <div class="input-container">
+                <textarea id="aiChatInput" placeholder="AIに質問してください..."></textarea>
+                <button id="clearAiChatButton" class="icon-button" title="入力をクリア">
+                    ✕
+                </button>
+            </div>
+            <button id="sendAiChatButton">送信</button>
+            <div id="aiChatLoadingSpinner" class="hidden">
+                <div class="spinner"></div>
+            </div>
+            <div id="aiChatResultContainer" class="hidden">
+                <div id="aiChatResult"></div>
+                <button id="copyAiChatButton" class="copy-button">
+                    <span class="copy-text">コピー</span>
+                    <span class="copied-text">Copied!</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- History section (shared across all tabs) -->
+        <div id="historyContainer" class="history-container">
+            <div class="history-header">
+                <h3>履歴</h3>
+                <div class="history-menu">
+                    <button id="historyMenuButton" class="menu-button" title="履歴メニュー">
+                        ⋮
+                    </button>
+                    <div id="historyMenuDropdown" class="dropdown-menu hidden">
+                        <button id="importHistoryButton" class="dropdown-item">
+                            <span class="menu-icon">📥</span>
+                            <span class="menu-text">履歴をインポート</span>
+                        </button>
+                        <button id="exportHistoryButton" class="dropdown-item">
+                            <span class="menu-icon">📤</span>
+                            <span class="menu-text">履歴をエクスポート</span>
+                        </button>
+                        <button id="clearHistoryButton" class="dropdown-item">
+                            <span class="menu-icon">🗑️</span>
+                            <span class="menu-text">履歴を削除</span>
+                        </button>
+                    </div>
+                </div>
+                <input type="file" id="importHistoryFile" accept=".json" class="hidden">
+            </div>
+            <ul id="historyList" class="history-list"></ul>
+        </div>
+    </div>
+
+    <!-- Hidden file input for settings import -->
+    <input type="file" id="importSettingsFile" accept=".json" class="hidden">
+    
+    <script src="js/sidebar.js" type="module"></script>
+</body>
+</html> 

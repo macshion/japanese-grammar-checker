@@ -1,0 +1,55 @@
+{
+  "manifest_version": 3,
+  "name": "Japanese Grammar Checker - DEV",
+  "version": "1.0",
+  "description": "AI-powered Japanese grammar checker and optimizer (Development Version)",
+  "permissions": [
+    "sidePanel",
+    "storage",
+    "contextMenus",
+    "notifications",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src https://api.openai.com"
+  },
+  "side_panel": {
+    "default_path": "sidebar.html"
+  },
+  "background": {
+    "service_worker": "js/background.js",
+    "type": "module"
+  },
+  "icons": {
+    "128": "icon.svg"
+  },
+  "action": {
+    "default_icon": "icon.svg"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "js/content.js"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "assets/*",
+        "css/*",
+        "js/*"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ],
+  "key": "z+lu9j6ZemuG4YNaD3r14AGot5r05Xa9bHio7zFaVbk="
+}

@@ -2,6 +2,7 @@
   "name": "japanese-grammar-checker",
   "private": true,
   "version": "1.0.0",
+  "description": "A Japanese grammar checker and translation tool",
   "type": "module",
   "license": "MIT",
   "scripts": {
@@ -10,17 +11,62 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "build:extension": "vite build --config vite.config.extension.js",
-    "clean": "rm -rf dist",
-    "clean:build": "npm run clean && npm run build:extension"
+    "build:extension:dev": "cross-env BUILD_ENV=development vite build --config vite.config.extension.js",
+    "build:extension:prod": "vite build --config vite.config.extension.js",
+    "build:all": "npm run build:extension:dev && npm run build:extension:prod",
+    "clean": "rimraf dist dist-dev",
+    "clean:build": "npm run clean && npm run build:all",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
+    "test:coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@babel/preset-env": "^7.24.0",
     "@eslint/js": "^9.21.0",
+    "@jest/globals": "^29.7.0",
+    "@testing-library/dom": "^9.3.4",
+    "@testing-library/jest-dom": "^6.4.2",
+    "autoprefixer": "^10.4.17",
+    "cross-env": "^7.0.3",
     "eslint": "^9.21.0",
     "globals": "^15.15.0",
-    "vite": "^6.2.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "postcss": "^8.4.35",
+    "rimraf": "^5.0.10",
     "tailwindcss": "^3.4.1",
-    "autoprefixer": "^10.4.17",
-    "postcss": "^8.4.35"
+    "vite": "^6.2.0"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "moduleNameMapper": {
+      "^../utils/(.*)$": "<rootDir>/js/utils/$1",
+      "^../modules/(.*)$": "<rootDir>/js/modules/$1",
+      "^../../js/(.*)$": "<rootDir>/js/$1"
+    },
+    "transform": {},
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/setup.js"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "json"
+    ],
+    "testEnvironmentOptions": {
+      "customExportConditions": [
+        "node",
+        "node-addons"
+      ]
+    },
+    "moduleDirectories": [
+      "node_modules",
+      "js"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(source-map)/)"
+    ]
   }
 }

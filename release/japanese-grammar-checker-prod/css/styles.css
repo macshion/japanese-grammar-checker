@@ -1,0 +1,55 @@
+/* History Styles */
+.history-filter-button {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    background-color: #f3f4f6;
+    color: #4b5563;
+    transition: all 0.2s;
+}
+
+.history-filter-button:hover {
+    background-color: #e5e7eb;
+}
+
+.history-filter-button.active {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.history-item {
+    position: relative;
+    transition: background-color 0.2s;
+}
+
+.history-item:hover {
+    background-color: #f9fafb;
+}
+
+.history-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.icon-button {
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    background: transparent;
+    transition: background-color 0.2s;
+}
+
+.icon-button:hover {
+    background-color: #e5e7eb;
+}
+
+.corrected-text,
+.translated-text,
+.chat-answer {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.explanation-text {
+    font-size: 0.875rem;
+    font-style: italic;
+} 

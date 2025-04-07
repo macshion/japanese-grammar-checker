@@ -1,0 +1,1 @@
+console.log("Japanese Grammar Checker content script loaded");chrome.runtime.onMessage.addListener((e,n,t)=>{if(e.action==="checkText"){const r=window.getSelection().toString();return t(r?{text:r}:{error:"No text selected"}),!0}else if(e.action==="updateSelectedText")return chrome.runtime.sendMessage({action:"updateSidebarText",text:e.text}),!0});

@@ -2,8 +2,13 @@ import { UI_ELEMENTS, UI_MESSAGES, STORAGE_CONFIG } from '../config.js';
 
 // Helper function to update history list UI
 export async function updateHistoryList() {
-    const historyList = document.getElementById(UI_ELEMENTS.HISTORY_LIST);
-    const historyContainer = document.getElementById(UI_ELEMENTS.HISTORY_CONTAINER);
+    const historyList = document.getElementById('history-list');
+    const historyContainer = document.getElementById('historyContainer');
+    
+    if (!historyList) {
+        console.error('History list element not found');
+        return;
+    }
     
     try {
         chrome.storage.local.get([STORAGE_CONFIG.KEYS.HISTORY], (result) => {
@@ -66,17 +71,26 @@ export async function updateHistoryList() {
                     // Add selected class to clicked item
                     li.classList.add('selected');
                     
-                    document.getElementById(UI_ELEMENTS.INPUT_TEXT).value = history[index].originalText;
+                    const inputField = document.getElementById(UI_ELEMENTS.INPUT_TEXT);
+                    if (inputField) {
+                        inputField.value = history[index].originalText;
+                    }
                     
                     // Format the corrected text for display
                     const resultElement = document.getElementById(UI_ELEMENTS.RESULT);
-                    resultElement.innerHTML = formatTextForDisplay(history[index].correctedText);
+                    if (resultElement) {
+                        resultElement.innerHTML = formatTextForDisplay(history[index].correctedText);
                     
-                    document.getElementById(UI_ELEMENTS.RESULT_CONTAINER).classList.remove('hidden');
+                        const resultContainer = document.getElementById(UI_ELEMENTS.RESULT_CONTAINER);
+                        if (resultContainer) {
+                            resultContainer.classList.remove('hidden');
+                        }
+                    }
                 });
                 
                 // Copy button - copy corrected text
-                li.querySelector('.history-copy-btn').addEventListener('click', (e) => {
+                const copyBtn = li.querySelector('.history-copy-btn');
+                copyBtn?.addEventListener('click', (e) => {
                     e.stopPropagation();
                     navigator.clipboard.writeText(history[index].correctedText);
                     
@@ -91,180 +105,175 @@ export async function updateHistoryList() {
                 
                 // View original text button
                 const viewOriginalBtn = li.querySelector('.history-view-original-btn');
-                if (viewOriginalBtn) {
-                    viewOriginalBtn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        
-                        // Create modal overlay
-                        const modal = document.createElement('div');
-                        modal.className = 'modal-overlay';
-                        
-                        // Create modal content
-                        const modalContent = document.createElement('div');
-                        modalContent.className = 'modal-content';
-                        
-                        // Create modal header
-                        const modalHeader = document.createElement('div');
-                        modalHeader.className = 'modal-header';
-                        
-                        const modalTitle = document.createElement('h3');
-                        modalTitle.textContent = UI_MESSAGES.ORIGINAL_TEXT_TITLE;
-                        
-                        const closeButton = document.createElement('button');
-                        closeButton.className = 'modal-close-btn';
-                        closeButton.textContent = '✕';
-                        closeButton.addEventListener('click', () => {
-                            document.body.removeChild(modal);
-                        });
-                        
-                        modalHeader.appendChild(modalTitle);
-                        modalHeader.appendChild(closeButton);
-                        
-                        // Create modal body
-                        const modalBody = document.createElement('div');
-                        modalBody.className = 'modal-body';
-                        
-                        const originalText = document.createElement('div');
-                        originalText.className = 'original-text-modal';
-                        originalText.innerHTML = formatTextForDisplay(history[index].originalText);
-                        
-                        modalBody.appendChild(originalText);
-                        
-                        // Assemble modal
-                        modalContent.appendChild(modalHeader);
-                        modalContent.appendChild(modalBody);
-                        modal.appendChild(modalContent);
-                        
-                        // Add to document
-                        document.body.appendChild(modal);
-                        
-                        // Close modal when clicking outside
-                        modal.addEventListener('click', (e) => {
-                            if (e.target === modal) {
-                                document.body.removeChild(modal);
-                            }
-                        });
+                viewOriginalBtn?.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    
+                    // Create modal overlay
+                    const modal = document.createElement('div');
+                    modal.className = 'modal-overlay';
+                    
+                    // Create modal content
+                    const modalContent = document.createElement('div');
+                    modalContent.className = 'modal-content';
+                    
+                    // Create modal header
+                    const modalHeader = document.createElement('div');
+                    modalHeader.className = 'modal-header';
+                    
+                    const modalTitle = document.createElement('h3');
+                    modalTitle.textContent = UI_MESSAGES.ORIGINAL_TEXT_TITLE;
+                    
+                    const closeButton = document.createElement('button');
+                    closeButton.className = 'modal-close-btn';
+                    closeButton.textContent = '✕';
+                    closeButton.addEventListener('click', () => {
+                        document.body.removeChild(modal);
                     });
-                }
+                    
+                    modalHeader.appendChild(modalTitle);
+                    modalHeader.appendChild(closeButton);
+                    
+                    // Create modal body
+                    const modalBody = document.createElement('div');
+                    modalBody.className = 'modal-body';
+                    
+                    const originalText = document.createElement('div');
+                    originalText.className = 'original-text-modal';
+                    originalText.innerHTML = formatTextForDisplay(history[index].originalText);
+                    
+                    modalBody.appendChild(originalText);
+                    
+                    // Assemble modal
+                    modalContent.appendChild(modalHeader);
+                    modalContent.appendChild(modalBody);
+                    modal.appendChild(modalContent);
+                    
+                    // Add to document
+                    document.body.appendChild(modal);
+                    
+                    // Close modal when clicking outside
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            document.body.removeChild(modal);
+                        }
+                    });
+                });
                 
                 // View explanation button
                 const viewExplanationBtn = li.querySelector('.history-view-explanation-btn');
-                if (viewExplanationBtn) {
-                    viewExplanationBtn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        
-                        // Create modal overlay
-                        const modal = document.createElement('div');
-                        modal.className = 'modal-overlay';
-                        
-                        // Create modal content
-                        const modalContent = document.createElement('div');
-                        modalContent.className = 'modal-content';
-                        
-                        // Create modal header
-                        const modalHeader = document.createElement('div');
-                        modalHeader.className = 'modal-header';
-                        
-                        const modalTitle = document.createElement('h3');
-                        modalTitle.textContent = UI_MESSAGES.EXPLANATION_TITLE;
-                        
-                        const closeButton = document.createElement('button');
-                        closeButton.className = 'modal-close-btn';
-                        closeButton.textContent = '✕';
-                        closeButton.addEventListener('click', () => {
-                            document.body.removeChild(modal);
-                        });
-                        
-                        modalHeader.appendChild(modalTitle);
-                        modalHeader.appendChild(closeButton);
-                        
-                        // Create modal body
-                        const modalBody = document.createElement('div');
-                        modalBody.className = 'modal-body';
-                        
-                        const explanationText = document.createElement('div');
-                        explanationText.className = 'explanation-text-modal';
-                        explanationText.innerHTML = formatTextForDisplay(history[index].explanation);
-                        
-                        modalBody.appendChild(explanationText);
-                        
-                        // Assemble modal
-                        modalContent.appendChild(modalHeader);
-                        modalContent.appendChild(modalBody);
-                        modal.appendChild(modalContent);
-                        
-                        // Add to document
-                        document.body.appendChild(modal);
-                        
-                        // Close modal when clicking outside
-                        modal.addEventListener('click', (e) => {
-                            if (e.target === modal) {
-                                document.body.removeChild(modal);
-                            }
-                        });
+                viewExplanationBtn?.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    
+                    // Create modal overlay
+                    const modal = document.createElement('div');
+                    modal.className = 'modal-overlay';
+                    
+                    // Create modal content
+                    const modalContent = document.createElement('div');
+                    modalContent.className = 'modal-content';
+                    
+                    // Create modal header
+                    const modalHeader = document.createElement('div');
+                    modalHeader.className = 'modal-header';
+                    
+                    const modalTitle = document.createElement('h3');
+                    modalTitle.textContent = UI_MESSAGES.EXPLANATION_TITLE;
+                    
+                    const closeButton = document.createElement('button');
+                    closeButton.className = 'modal-close-btn';
+                    closeButton.textContent = '✕';
+                    closeButton.addEventListener('click', () => {
+                        document.body.removeChild(modal);
                     });
-                }
+                    
+                    modalHeader.appendChild(modalTitle);
+                    modalHeader.appendChild(closeButton);
+                    
+                    // Create modal body
+                    const modalBody = document.createElement('div');
+                    modalBody.className = 'modal-body';
+                    
+                    const explanationText = document.createElement('div');
+                    explanationText.className = 'explanation-text-modal';
+                    explanationText.innerHTML = formatTextForDisplay(history[index].explanation);
+                    
+                    modalBody.appendChild(explanationText);
+                    
+                    // Assemble modal
+                    modalContent.appendChild(modalHeader);
+                    modalContent.appendChild(modalBody);
+                    modal.appendChild(modalContent);
+                    
+                    // Add to document
+                    document.body.appendChild(modal);
+                    
+                    // Close modal when clicking outside
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            document.body.removeChild(modal);
+                        }
+                    });
+                });
                 
                 // View full response button
                 const viewFullBtn = li.querySelector('.history-view-full-btn');
-                if (viewFullBtn) {
-                    viewFullBtn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        
-                        // Create modal overlay
-                        const modal = document.createElement('div');
-                        modal.className = 'modal-overlay';
-                        
-                        // Create modal content
-                        const modalContent = document.createElement('div');
-                        modalContent.className = 'modal-content';
-                        
-                        // Create modal header
-                        const modalHeader = document.createElement('div');
-                        modalHeader.className = 'modal-header';
-                        
-                        const modalTitle = document.createElement('h3');
-                        modalTitle.textContent = UI_MESSAGES.FULL_RESPONSE_TITLE;
-                        
-                        const closeButton = document.createElement('button');
-                        closeButton.className = 'modal-close-btn';
-                        closeButton.textContent = '✕';
-                        closeButton.addEventListener('click', () => {
-                            document.body.removeChild(modal);
-                        });
-                        
-                        modalHeader.appendChild(modalTitle);
-                        modalHeader.appendChild(closeButton);
-                        
-                        // Create modal body
-                        const modalBody = document.createElement('div');
-                        modalBody.className = 'modal-body';
-                        
-                        const fullResponseText = document.createElement('div');
-                        fullResponseText.className = 'full-response-text';
-                        fullResponseText.innerHTML = formatTextForDisplay(history[index].fullResponse);
-                        
-                        modalBody.appendChild(fullResponseText);
-                        
-                        // Assemble modal
-                        modalContent.appendChild(modalHeader);
-                        modalContent.appendChild(modalBody);
-                        modal.appendChild(modalContent);
-                        
-                        // Add to document
-                        document.body.appendChild(modal);
-                        
-                        // Close modal when clicking outside
-                        modal.addEventListener('click', (e) => {
-                            if (e.target === modal) {
-                                document.body.removeChild(modal);
-                            }
-                        });
+                viewFullBtn?.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    
+                    // Create modal overlay
+                    const modal = document.createElement('div');
+                    modal.className = 'modal-overlay';
+                    
+                    // Create modal content
+                    const modalContent = document.createElement('div');
+                    modalContent.className = 'modal-content';
+                    
+                    // Create modal header
+                    const modalHeader = document.createElement('div');
+                    modalHeader.className = 'modal-header';
+                    
+                    const modalTitle = document.createElement('h3');
+                    modalTitle.textContent = UI_MESSAGES.FULL_RESPONSE_TITLE;
+                    
+                    const closeButton = document.createElement('button');
+                    closeButton.className = 'modal-close-btn';
+                    closeButton.textContent = '✕';
+                    closeButton.addEventListener('click', () => {
+                        document.body.removeChild(modal);
                     });
-                }
+                    
+                    modalHeader.appendChild(modalTitle);
+                    modalHeader.appendChild(closeButton);
+                    
+                    // Create modal body
+                    const modalBody = document.createElement('div');
+                    modalBody.className = 'modal-body';
+                    
+                    const fullResponseText = document.createElement('div');
+                    fullResponseText.className = 'full-response-text';
+                    fullResponseText.innerHTML = formatTextForDisplay(history[index].fullResponse);
+                    
+                    modalBody.appendChild(fullResponseText);
+                    
+                    // Assemble modal
+                    modalContent.appendChild(modalHeader);
+                    modalContent.appendChild(modalBody);
+                    modal.appendChild(modalContent);
+                    
+                    // Add to document
+                    document.body.appendChild(modal);
+                    
+                    // Close modal when clicking outside
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) {
+                            document.body.removeChild(modal);
+                        }
+                    });
+                });
                 
                 // Delete button
-                li.querySelector('.history-delete-btn').addEventListener('click', (e) => {
+                const deleteBtn = li.querySelector('.history-delete-btn');
+                deleteBtn?.addEventListener('click', (e) => {
                     e.stopPropagation();
                     
                     if (confirm('この履歴を削除しますか？')) {
@@ -280,6 +289,8 @@ export async function updateHistoryList() {
         });
     } catch (error) {
         console.error('Failed to load history:', error);
-        historyList.innerHTML = `<li class="text-red-500">${UI_MESSAGES.ERROR_PREFIX}${error.message}</li>`;
+        if (historyList) {
+            historyList.innerHTML = `<li class="text-red-500">${UI_MESSAGES.ERROR_PREFIX}${error.message}</li>`;
+        }
     }
 }

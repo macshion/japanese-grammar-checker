@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80">
+  <circle cx="40" cy="40" r="32" fill="#2fb1f1" />
+  <text x="40" y="40" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="central">文法</text>
+  <!-- DEV label -->
+  <rect x="10" y="55" width="60" height="20" fill="rgba(255,0,0,0.7)" rx="5" ry="5" />
+  <text x="40" y="65" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="central">DEV</text>
+</svg> 

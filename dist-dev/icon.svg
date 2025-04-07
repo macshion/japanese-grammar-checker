@@ -1,0 +1,11 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+          <rect width="128" height="128" rx="16" fill="#2196F3"/>
+          <text x="64" y="64" font-size="72" font-family="Arial, sans-serif" fill="white" text-anchor="middle" dominant-baseline="middle">
+            開発
+          </text>
+          <rect x="0" y="100" width="128" height="28" fill="rgba(255,0,0,0.7)"/>
+          <text x="64" y="118" font-size="18" font-family="Arial, sans-serif" fill="white" text-anchor="middle" dominant-baseline="middle">
+            DEV版
+          </text>
+          <path d="M16 96 L112 96" stroke="white" stroke-width="4" stroke-opacity="0.3"/>
+        </svg>

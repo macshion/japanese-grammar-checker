@@ -162,10 +162,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultContainer = document.getElementById(UI_ELEMENTS.RESULT_CONTAINER);
     const result = document.getElementById(UI_ELEMENTS.RESULT);
     const copyButton = document.getElementById(UI_ELEMENTS.COPY_BUTTON);
-    const clearHistoryButton = document.getElementById(UI_ELEMENTS.CLEAR_HISTORY_BUTTON);
-    const exportHistoryButton = document.getElementById(UI_ELEMENTS.EXPORT_HISTORY_BUTTON);
-    const importHistoryButton = document.getElementById(UI_ELEMENTS.IMPORT_HISTORY_BUTTON);
-    const importHistoryFile = document.getElementById(UI_ELEMENTS.IMPORT_HISTORY_FILE);
+    const clearHistoryButton = document.getElementById('history-clear-button');
+    const exportHistoryButton = document.getElementById('history-export-button');
+    const importHistoryButton = document.getElementById('history-import-button');
+    const importHistoryFile = document.getElementById('history-import-file');
     const historyMenuButton = document.getElementById('historyMenuButton');
     const historyMenuDropdown = document.getElementById('historyMenuDropdown');
 
@@ -177,8 +177,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Close dropdown when clicking outside
     document.addEventListener('click', () => {
-        if (!historyMenuDropdown.classList.contains('hidden')) {
-            historyMenuDropdown.classList.add('hidden');
+        if (!historyMenuDropdown?.classList.contains('hidden')) {
+            historyMenuDropdown?.classList.add('hidden');
         }
     });
 
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Import history button functionality
     importHistoryButton?.addEventListener('click', () => {
         importHistoryFile.click();
-        historyMenuDropdown.classList.add('hidden');
+        historyMenuDropdown?.classList.add('hidden');
     });
 
     // Import history file change handler
@@ -307,7 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 URL.revokeObjectURL(url);
                 
                 // Close the dropdown
-                historyMenuDropdown.classList.add('hidden');
+                historyMenuDropdown?.classList.add('hidden');
             });
         } catch (error) {
             console.error('Failed to export history:', error);
@@ -324,7 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert(UI_MESSAGES.HISTORY_CLEARED);
                     
                     // Close the dropdown
-                    historyMenuDropdown.classList.add('hidden');
+                    historyMenuDropdown?.classList.add('hidden');
                 });
             } catch (error) {
                 console.error('Failed to clear history:', error);
@@ -334,14 +334,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Clear button functionality
-    clearButton.addEventListener('click', () => {
+    clearButton?.addEventListener('click', () => {
         inputText.value = '';
         resultContainer.classList.add('hidden');
         inputText.focus();
     });
 
     // Show/hide clear button based on input
-    inputText.addEventListener('input', () => {
+    inputText?.addEventListener('input', () => {
         clearButton.style.display = inputText.value.length > 0 ? 'flex' : 'none';
     });
 
@@ -349,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
     clearButton.style.display = 'none';
 
     // Copy button functionality
-    copyButton.addEventListener('click', async () => {
+    copyButton?.addEventListener('click', async () => {
         try {
             await navigator.clipboard.writeText(result.textContent);
             copyButton.classList.add('copied');
@@ -363,7 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    checkButton.addEventListener('click', async () => {
+    checkButton?.addEventListener('click', async () => {
         if (!inputText.value.trim()) {
             alert(UI_MESSAGES.EMPTY_INPUT);
             return;
@@ -491,7 +491,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     const resultElement = document.getElementById(UI_ELEMENTS.RESULT);
                     if (resultElement) {
                         // The result is already set with the formatted text above
-                        document.getElementById(UI_ELEMENTS.RESULT_CONTAINER).classList.remove('hidden');
+                        const resultContainer = document.getElementById(UI_ELEMENTS.RESULT_CONTAINER);
+                        if (resultContainer) {
+                            resultContainer.classList.remove('hidden');
+                        }
                     }
                 }
             }, 100); // Small delay to ensure the history list is updated

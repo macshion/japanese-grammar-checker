@@ -1,0 +1,26 @@
+<!-- History Section -->
+<div id="history-container" class="bg-white rounded-lg shadow-lg p-6 mt-8">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold text-gray-800">履歴</h2>
+        <div class="flex gap-2">
+            <button id="history-export-button" class="btn btn-secondary">
+                エクスポート
+            </button>
+            <button id="history-import-button" class="btn btn-secondary">
+                インポート
+            </button>
+            <input type="file" id="history-import-file" accept=".json" class="hidden">
+            <button id="history-clear-button" class="btn btn-danger">
+                削除
+            </button>
+        </div>
+    </div>
+
+    <div id="history-filter-container" class="flex gap-2 mb-4">
+        <!-- Filter buttons will be added dynamically -->
+    </div>
+
+    <ul id="history-list" class="divide-y divide-gray-200">
+        <!-- History items will be added dynamically -->
+    </ul>
+</div> 

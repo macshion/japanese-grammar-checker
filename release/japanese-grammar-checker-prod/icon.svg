@@ -1,0 +1,7 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <rect width="128" height="128" rx="16" fill="#4CAF50"/>
+  <text x="64" y="64" font-size="72" font-family="Arial, sans-serif" fill="white" text-anchor="middle" dominant-baseline="middle">
+    あ
+  </text>
+  <path d="M16 112 L112 112" stroke="white" stroke-width="4" stroke-opacity="0.3"/>
+</svg> 

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Japanese Grammar Checker</title>
+    <link rel="stylesheet" href="css/sidebar.css">
+    <!-- Remove the TailwindCSS CDN as it violates CSP -->
+</head>
+<body>
+    <div class="container">
+        <h2>日本語文法チェッカー</h2>
+        <div class="input-container">
+            <textarea id="inputText" placeholder="ここに日本語を入力してください..."></textarea>
+            <button id="clearButton" class="icon-button" title="入力をクリア">
+                ✕
+            </button>
+        </div>
+        <button id="checkButton">チェック</button>
+        <div id="loadingSpinner" class="hidden">
+            <div class="spinner"></div>
+        </div>
+        <div id="resultContainer" class="hidden">
+            <div id="result"></div>
+            <button id="copyButton" class="copy-button">
+                <span class="copy-text">コピー</span>
+                <span class="copied-text">Copied!</span>
+            </button>
+        </div>
+        
+        <!-- History section -->
+        <div id="historyContainer" class="history-container">
+            <div class="history-header">
+                <h3>履歴</h3>
+                <div class="history-menu">
+                    <button id="historyMenuButton" class="menu-button" title="履歴メニュー">
+                        ⋮
+                    </button>
+                    <div id="historyMenuDropdown" class="dropdown-menu hidden">
+                        <button id="importHistoryButton" class="dropdown-item">
+                            <span class="menu-icon">📥</span>
+                            <span class="menu-text">履歴をインポート</span>
+                        </button>
+                        <button id="exportHistoryButton" class="dropdown-item">
+                            <span class="menu-icon">📤</span>
+                            <span class="menu-text">履歴をエクスポート</span>
+                        </button>
+                        <button id="clearHistoryButton" class="dropdown-item">
+                            <span class="menu-icon">🗑️</span>
+                            <span class="menu-text">履歴を削除</span>
+                        </button>
+                    </div>
+                </div>
+                <input type="file" id="importHistoryFile" accept=".json" class="hidden">
+            </div>
+            <ul id="historyList" class="history-list"></ul>
+        </div>
+    </div>
+    <script src="js/sidebar.js" type="module"></script>
+</body>
+</html> 

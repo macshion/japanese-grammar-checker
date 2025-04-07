@@ -13,6 +13,11 @@ export function showApiKeyPrompt(onSaveCallback) {
     }
 
     const container = document.querySelector('.container');
+    if (!container) {
+        console.error('Container element not found');
+        return;
+    }
+    
     const promptDiv = document.createElement('div');
     promptDiv.className = 'api-key-prompt';
     promptDiv.innerHTML = `
@@ -24,7 +29,13 @@ export function showApiKeyPrompt(onSaveCallback) {
     container.prepend(promptDiv);
 
     const saveApiKey = () => {
-        const apiKey = document.getElementById('apiKeyInput').value.trim();
+        const apiKeyInput = document.getElementById('apiKeyInput');
+        if (!apiKeyInput) {
+            console.error('API key input element not found');
+            return;
+        }
+        
+        const apiKey = apiKeyInput.value.trim();
         
         // Validate API key format (should start with "sk-")
         if (!apiKey) {
@@ -52,10 +63,12 @@ export function showApiKeyPrompt(onSaveCallback) {
     };
 
     // Add click event listener
-    document.getElementById('saveApiKey').addEventListener('click', saveApiKey);
+    const saveButton = document.getElementById('saveApiKey');
+    saveButton?.addEventListener('click', saveApiKey);
     
     // Add Enter key support
-    document.getElementById('apiKeyInput').addEventListener('keydown', (e) => {
+    const apiKeyInput = document.getElementById('apiKeyInput');
+    apiKeyInput?.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();
             saveApiKey();
@@ -63,5 +76,5 @@ export function showApiKeyPrompt(onSaveCallback) {
     });
     
     // Focus the input field
-    document.getElementById('apiKeyInput').focus();
+    apiKeyInput?.focus();
 }
